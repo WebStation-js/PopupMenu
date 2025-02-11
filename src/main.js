@@ -4,6 +4,7 @@ var currentPath = null;
 class Menu {
     constructor() {
         this.listener = null;
+        this.popupListener = null;
         this.ele = null;
     };
 
@@ -22,7 +23,7 @@ class Menu {
         menuContainer.style.height = "100%";
         menuContainer.style.background = "rgb(0 0 0 / 70%)";
 
-        menuContainer.style.opacity = "1";
+        menuContainer.style.opacity = "0";
         menuContainer.style.transition = "all 0.2s";
 
         const menu = document.createElement("div");
@@ -68,6 +69,8 @@ class Menu {
 
         menuContainer.appendChild(menu);
         document.body.appendChild(menuContainer);
+
+        setTimeout(() => menuContainer.style.opacity = "1", 100);
     };
 
     async createConfirm(msg = "Are you sure?", agreeTxt = "Ok", declineTxt = "Cancel") {
@@ -84,7 +87,7 @@ class Menu {
         menuContainer.style.height = "100%";
         menuContainer.style.background = "rgb(0 0 0 / 70%)";
 
-        menuContainer.style.opacity = "1";
+        menuContainer.style.opacity = "0";
         menuContainer.style.transition = "all 0.2s";
 
         const menu = document.createElement("div");
@@ -161,6 +164,27 @@ class Menu {
 
         menuContainer.appendChild(menu);
         document.body.appendChild(menuContainer);
+
+        setTimeout(() => menuContainer.style.opacity = "1", 100);
+
+        var scope = this;
+        return new Promise((resolve, reject) => {
+            scope.popupListener = (e) => {
+                if ( e.code == "KeyZ" ) {
+                    menuContainer.style.opacity = "0";
+                    setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
+                    resolve(true);
+                };
+                if ( e.code == "KeyX" ) {
+                    menuContainer.style.opacity = "0";
+                    setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
+                    resolve(false);
+                };
+    
+                removeEventListener("keydown", scope.popupListener);
+            };
+            addEventListener("keydown", scope.popupListener);
+        });
     };
 
     async createAlert(msg = "Are you sure?", okTxt = "Ok") {
@@ -177,7 +201,7 @@ class Menu {
         menuContainer.style.height = "100%";
         menuContainer.style.background = "rgb(0 0 0 / 70%)";
 
-        menuContainer.style.opacity = "1";
+        menuContainer.style.opacity = "0";
         menuContainer.style.transition = "all 0.2s";
 
         const menu = document.createElement("div");
@@ -244,6 +268,22 @@ class Menu {
 
         menuContainer.appendChild(menu);
         document.body.appendChild(menuContainer);
+
+        setTimeout(() => menuContainer.style.opacity = "1", 100);
+
+        var scope = this;
+        return new Promise((resolve, reject) => {
+            scope.popupListener = (e) => {
+                if ( e.code == "KeyZ" ) {
+                    menuContainer.style.opacity = "0";
+                    setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
+                    resolve(true);
+                };
+    
+                removeEventListener("keydown", scope.popupListener);
+            };
+            addEventListener("keydown", scope.popupListener);
+        });
     };
 
     createItem(option, item) {
