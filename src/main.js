@@ -607,6 +607,8 @@ class Menu {
                     currentJson.value[ nameForCurrentIndex ] = false;
                     currentJson.value[ nameForNewIndex ] = true;
 
+                    if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
+
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
                 break;
@@ -630,6 +632,8 @@ class Menu {
                     currentJson.value[ nameForCurrentIndex ] = false;
                     currentJson.value[ nameForNewIndex ] = true;
 
+                    if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
+
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
                 break;
@@ -647,6 +651,7 @@ class Menu {
                     case "switch":
                         if ( currentJson.value == true ) currentJson.value = false;
                         else if ( currentJson.value == false ) currentJson.value = true;
+                        if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
                         WebStation.music.playSFX("checkbox.mp3");
                         this.createMenu(false, menuObj, currentPath, currentI)
                         break;
