@@ -1,7 +1,7 @@
 import Toastify from '../lib/toastify.js';
 import ToastifyCSS from '../lib/toastify.css' with { type: "css" };
 
-document.adoptedStyleSheets = [ ToastifyCSS ];
+document.adoptedStyleSheets.push(ToastifyCSS);
 
 var menuObj = null;
 var currentPath = null;
