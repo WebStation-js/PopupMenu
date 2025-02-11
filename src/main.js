@@ -549,8 +549,6 @@ class Menu {
         document.body.appendChild(menuContainer);
 
         this.ele = menuContainer;
-
-        hide == true ? WebStation.music.playSFX("select.mp3") : null;
     };
 
     open() {
