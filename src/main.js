@@ -1,3 +1,8 @@
+import Toastify from '../lib/toastify.js';
+import ToastifyCSS from '../lib/toastify.css' with { type: "css" };
+
+document.adoptedStyleSheets = [ ToastifyCSS ];
+
 var menuObj = null;
 var currentPath = null;
 
@@ -6,6 +11,27 @@ class Menu {
         this.listener = null;
         this.popupListener = null;
         this.ele = null;
+    };
+
+    async createToast(text, onClick = function(){}) {
+        this.createCSS();
+
+        Toastify({
+            text,
+            duration: 3000,
+            close: false,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+              background: "#fff",
+              color: "rgb(91 91 91)",
+              fontWeight: "lighter",
+              letterSpacing: "-0.05em",
+              borderRadius: "10px",
+            },
+            onClick 
+        }).showToast();
     };
 
     async createPrompt(msg = "Enter text", placeholder = "", defaultValue = "") {
@@ -71,6 +97,7 @@ class Menu {
         document.body.appendChild(menuContainer);
 
         setTimeout(() => menuContainer.style.opacity = "1", 100);
+        WebStation.music.playSFX("select.mp3");
     };
 
     async createConfirm(msg = "Are you sure?", agreeTxt = "Ok", declineTxt = "Cancel") {
@@ -166,16 +193,19 @@ class Menu {
         document.body.appendChild(menuContainer);
 
         setTimeout(() => menuContainer.style.opacity = "1", 100);
+        WebStation.music.playSFX("select.mp3");
 
         var scope = this;
         return new Promise((resolve, reject) => {
             scope.popupListener = (e) => {
                 if ( e.code == "KeyZ" ) {
+                    WebStation.music.playSFX("select.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(true);
                 };
                 if ( e.code == "KeyX" ) {
+                    WebStation.music.playSFX("back.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(false);
@@ -270,11 +300,13 @@ class Menu {
         document.body.appendChild(menuContainer);
 
         setTimeout(() => menuContainer.style.opacity = "1", 100);
+        WebStation.music.playSFX("select.mp3");
 
         var scope = this;
         return new Promise((resolve, reject) => {
             scope.popupListener = (e) => {
                 if ( e.code == "KeyZ" ) {
+                    WebStation.music.playSFX("select.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(true);
@@ -517,6 +549,8 @@ class Menu {
         document.body.appendChild(menuContainer);
 
         this.ele = menuContainer;
+
+        hide == true ? WebStation.music.playSFX("select.mp3") : null;
     };
 
     open() {
@@ -546,11 +580,13 @@ class Menu {
                 if ( !selected.previousElementSibling ) return;
                 selected.previousElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
+                WebStation.music.playSFX("navigate.mp3");
                 break;
             case "ArrowDown":
                 if ( !selected.nextElementSibling ) return;
                 selected.nextElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
+                WebStation.music.playSFX("navigate.mp3");
                 break;
 
             case "ArrowLeft":
@@ -560,6 +596,7 @@ class Menu {
                 var type = currentJson.type;
 
                 if ( type == "selection") {
+                    WebStation.music.playSFX("navigate.mp3");
                     var currentSelectedIndex = Object.values(currentJson.value).indexOf(true);
                     var newIndex = currentSelectedIndex - 1;
 
@@ -582,6 +619,7 @@ class Menu {
                 var type = currentJson.type;
 
                 if ( type == "selection") {
+                    WebStation.music.playSFX("navigate.mp3");
                     var currentSelectedIndex = Object.values(currentJson.value).indexOf(true);
                     var newIndex = currentSelectedIndex + 1;
 
@@ -605,21 +643,25 @@ class Menu {
                 
                 switch ( type ) {
                     case "link":
+                        WebStation.music.playSFX("select.mp3");
                         this.createMenu(false, menuObj, currentPath + selected.firstElementChild.innerText.toLowerCase() + "/")
                         break;
                     case "switch":
                         if ( currentJson.value == true ) currentJson.value = false;
                         else if ( currentJson.value == false ) currentJson.value = true;
+                        WebStation.music.playSFX("checkbox.mp3");
                         this.createMenu(false, menuObj, currentPath, currentI)
                         break;
                     case "selection":
                         break;
                     case "function":
+                        WebStation.music.playSFX("select.mp3");
                         currentJson.value();
                         break;
                 };
                 break;
             case "KeyX":
+                WebStation.music.playSFX("back.mp3");
                 if ( currentPath == "/" ) {
                     this.close();
                 } else {
