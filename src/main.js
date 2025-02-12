@@ -42,6 +42,7 @@ class Menu {
 
         // Menu creation
         const menuContainer = document.createElement("div");
+        menuContainer.id = "menu-container";
         menuContainer.style.position = "fixed";
         menuContainer.style.top = "0";
         menuContainer.style.left = "0";
@@ -107,6 +108,7 @@ class Menu {
 
         // Menu creation
         const menuContainer = document.createElement("div");
+        menuContainer.id = "menu-container";
         menuContainer.style.position = "fixed";
         menuContainer.style.top = "0";
         menuContainer.style.left = "0";
@@ -224,6 +226,7 @@ class Menu {
 
         // Menu creation
         const menuContainer = document.createElement("div");
+        menuContainer.id = "menu-container";
         menuContainer.style.position = "fixed";
         menuContainer.style.top = "0";
         menuContainer.style.left = "0";
@@ -469,6 +472,7 @@ class Menu {
 
         // Menu creation
         const menuContainer = document.createElement("div");
+        menuContainer.id = "menu-container";
         menuContainer.style.position = "fixed";
         menuContainer.style.top = "0";
         menuContainer.style.left = "0";
