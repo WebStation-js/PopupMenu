@@ -215,7 +215,7 @@ class Menu {
     
                 removeEventListener("keydown", scope.popupListener);
             };
-            addEventListener("keydown", scope.popupListener);
+            WebStation.keybind.addEventListener("down", scope.popupListener);
         });
     };
 
@@ -317,7 +317,7 @@ class Menu {
     
                 removeEventListener("keydown", scope.popupListener);
             };
-            addEventListener("keydown", scope.popupListener);
+            WebStation.keybind.addEventListener("down", scope.popupListener);
         });
     };
 
@@ -563,7 +563,7 @@ class Menu {
 
             this.handleKeys(e);
         };
-        addEventListener("keydown", this.listener);
+        WebStation.keybind.addEventListener("down", this.listener);
     };
 
     close() {
@@ -577,21 +577,21 @@ class Menu {
         var menuList = Array.prototype.slice.call( document.querySelector("#menu").childNodes[1].childNodes );
         var currentI = menuList.indexOf(selected);
         
-        switch ( e.code ) {
-            case "ArrowUp":
+        switch ( e.detail.code ) {
+            case "DPAD_UP":
                 if ( !selected.previousElementSibling ) return;
                 selected.previousElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
                 WebStation.music.playSFX("navigate.mp3");
                 break;
-            case "ArrowDown":
+            case "DPAD_DOWN":
                 if ( !selected.nextElementSibling ) return;
                 selected.nextElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
                 WebStation.music.playSFX("navigate.mp3");
                 break;
 
-            case "ArrowLeft":
+            case "DPAD_LEFT":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
                 
@@ -616,7 +616,7 @@ class Menu {
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
                 break;
-            case "ArrowRight":
+            case "DPAD_RIGHT":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
                 
@@ -641,7 +641,7 @@ class Menu {
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
                 break;
-            case "KeyZ":
+            case "A":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
                 
@@ -667,7 +667,7 @@ class Menu {
                         break;
                 };
                 break;
-            case "KeyX":
+            case "B":
                 WebStation.music.playSFX("back.mp3");
                 if ( currentPath == "/" ) {
                     this.close();
