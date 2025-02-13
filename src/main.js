@@ -614,14 +614,14 @@ class Menu {
                 if (!selected.previousElementSibling) return;
                 selected.previousElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
-                selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "center", inline: "center" });
+                if (selected.previousElementSibling) selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "center", inline: "center" });
                 WebStation.music.playSFX("navigate.mp3");
                 break;
             case "DPAD_DOWN":
                 if (!selected.nextElementSibling) return;
                 selected.nextElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
-                selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
+                if (selected.previousElementSibling) selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
                 WebStation.music.playSFX("navigate.mp3");
                 break;
 
