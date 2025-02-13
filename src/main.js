@@ -13,7 +13,7 @@ class Menu {
         this.ele = null;
     };
 
-    async createToast(text, onClick = function(){}) {
+    async createToast(text, onClick = function () { }) {
         this.createCSS();
 
         Toastify({
@@ -24,13 +24,13 @@ class Menu {
             position: "center",
             stopOnFocus: true,
             style: {
-              background: "#fff",
-              color: "rgb(91 91 91)",
-              fontWeight: "lighter",
-              letterSpacing: "-0.05em",
-              borderRadius: "10px",
+                background: "#fff",
+                color: "rgb(91 91 91)",
+                fontWeight: "lighter",
+                letterSpacing: "-0.05em",
+                borderRadius: "10px",
             },
-            onClick 
+            onClick
         }).showToast();
     };
 
@@ -38,7 +38,7 @@ class Menu {
         // TODO
         this.createCSS();
 
-        if ( document.querySelector("#popup") ) return defaultValue;
+        if (document.querySelector("#popup")) return defaultValue;
 
         // Menu creation
         const menuContainer = document.createElement("div");
@@ -104,7 +104,7 @@ class Menu {
     async createConfirm(msg = "Are you sure?", agreeTxt = "Ok", declineTxt = "Cancel") {
         this.createCSS();
 
-        if ( document.querySelector("#popup") ) return declineTxt;
+        if (document.querySelector("#popup")) return declineTxt;
 
         // Menu creation
         const menuContainer = document.createElement("div");
@@ -200,19 +200,19 @@ class Menu {
         var scope = this;
         return new Promise((resolve, reject) => {
             scope.popupListener = (e) => {
-                if ( e.code == "KeyZ" ) {
+                if (e.code == "KeyZ") {
                     WebStation.music.playSFX("select.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(true);
                 };
-                if ( e.code == "KeyX" ) {
+                if (e.code == "KeyX") {
                     WebStation.music.playSFX("back.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(false);
                 };
-    
+
                 removeEventListener("keydown", scope.popupListener);
             };
             WebStation.keybind.addEventListener("down", scope.popupListener);
@@ -222,7 +222,7 @@ class Menu {
     async createAlert(msg = "Are you sure?", okTxt = "Ok") {
         this.createCSS();
 
-        if ( document.querySelector("#popup") ) return true;
+        if (document.querySelector("#popup")) return true;
 
         // Menu creation
         const menuContainer = document.createElement("div");
@@ -308,13 +308,13 @@ class Menu {
         var scope = this;
         return new Promise((resolve, reject) => {
             scope.popupListener = (e) => {
-                if ( e.code == "KeyZ" ) {
+                if (e.code == "KeyZ") {
                     WebStation.music.playSFX("select.mp3");
                     menuContainer.style.opacity = "0";
                     setTimeout(() => document.querySelector("#popup").parentElement.remove(), 300);
                     resolve(true);
                 };
-    
+
                 removeEventListener("keydown", scope.popupListener);
             };
             WebStation.keybind.addEventListener("down", scope.popupListener);
@@ -323,21 +323,24 @@ class Menu {
 
     createItem(option, item) {
         const value = item.value;
+        const type = item.type;
         const name = document.createElement("div");
         name.innerText = item.name;
 
-        name.style.fontSize = "25px";
+        name.style.fontSize = type == "file" ? "20px" : "25px";
         name.style.color = "rgb(135 135 135)";
         name.style.fontWeight = "lighter";
         name.style.textTransform = "uppercase";
         name.style.letterSpacing = "-0.05em";
         name.style.marginLeft = "10px";
+        name.style.textOverflow = "elipsis";
+        name.style.textWrap = "nowrap";
+        name.style.maxWidth = "80%";
+        name.style.overflow = "hidden";
 
         option.appendChild(name);
 
-        const type = item.type;
-
-        switch ( type ) {
+        switch (type) {
             case "link":
                 var action = document.createElement("i");
                 action.className = `actionIcon fa-solid fa-chevron-right`;
@@ -378,7 +381,7 @@ class Menu {
                 currentSel.style.color = "rgb(135 135 135)";
                 currentSel.style.fontSize = "25px";
 
-                currentSel.innerText = Object.keys(value)[ Object.values(value).indexOf(true) ];
+                currentSel.innerText = Object.keys(value)[Object.values(value).indexOf(true)];
 
                 option.appendChild(currentSel);
 
@@ -391,6 +394,29 @@ class Menu {
 
                 option.appendChild(rightArrow);
                 break;
+            case "file":
+                var action = document.createElement("i");
+                action.className = `actionIcon`;
+
+                action.style.marginLeft = "auto";
+                action.style.marginRight = "10px";
+                action.style.color = "rgb(135 135 135)";
+                action.style.fontSize = "15px";
+                action.style.width = "max-content";
+
+                action.style.textOverflow = "elipsis";
+                action.style.textWrap = "nowrap";
+                action.style.maxWidth = "15%";
+                action.style.overflow = "hidden";
+
+                action.style.display = "flex";
+                action.style.justifyContent = "right";
+                action.style.paddingRight = "2px";
+
+                action.innerText = value.size;
+
+                option.appendChild(action);
+                break;
             case "function":
                 break;
         };
@@ -398,7 +424,7 @@ class Menu {
 
     createCSS() {
         // Selection CSS
-        if ( !document.querySelector("head #menu-css") ) {
+        if (!document.querySelector("head #menu-css")) {
             const menuCSS = document.createElement("style");
             menuCSS.id = "menu-css";
             menuCSS.innerText = `#menu .selected {
@@ -436,36 +462,40 @@ class Menu {
     };
 
     getChildren(path, optionsObj) {
-        let currentChildren = optionsObj.filter((e, index) => index > 1);
-        let headerTxt = optionsObj[0];
-        let footerTxt = optionsObj[1];
+        const pathArr = path.split('/').filter(Boolean);
 
-        let pathArr = path.split('/');
-        //for (let i = 1; i < pathArr.length; i++) {
-        for (const i in pathArr) {
-            if( pathArr[i] ){
-                for (const folder in optionsObj) {
-                    if( optionsObj[folder].name == pathArr[i] ){
-                        headerTxt = optionsObj[folder].children[0];
-                        footerTxt = optionsObj[folder].children[1];
-                        currentChildren = optionsObj[folder].children.filter((e, index) => index > 1);
-                        break;
-                    };
-                };
-            };
-        };
+        function findOptions(currentOptions, pathIndex) {
+            if (pathIndex === pathArr.length) {
+                if (currentOptions && Array.isArray(currentOptions) && currentOptions.length >= 2) {
+                    const headerTxt = currentOptions[0];
+                    const footerTxt = currentOptions[1];
+                    const currentChildren = currentOptions.slice(2);
+                    return { currentChildren, headerTxt, footerTxt };
+                } else {
+                    return { currentChildren: [], headerTxt: null, footerTxt: null };
+                }
+            }
 
-        return {
-            currentChildren,
-            headerTxt,
-            footerTxt
-        };
-    };
+            const currentPathPart = pathArr[pathIndex];
+
+            if (Array.isArray(currentOptions)) {
+                for (const item of currentOptions) {
+                    if (item && item.name === currentPathPart) {
+                        return findOptions(item.children, pathIndex + 1);
+                    }
+                }
+            }
+
+            return { currentChildren: [], headerTxt: null, footerTxt: null };
+        }
+
+        return findOptions(optionsObj, 0);
+    }
 
     createMenu(hide, optionsObj, path = "/", selectI = 0) {
         this.createCSS();
 
-        if ( document.querySelector("#menu") ) document.querySelector("#menu").parentElement.remove();
+        if (document.querySelector("#menu")) document.querySelector("#menu").parentElement.remove();
 
         menuObj = optionsObj;
         currentPath = path;
@@ -499,6 +529,8 @@ class Menu {
         const options = document.createElement("div");
         options.style.width = "100%";
         options.style.height = "350px";
+        options.style.overflow = "auto";
+        options.style.scrollbarWidth = "thin";
 
         const { currentChildren, headerTxt, footerTxt } = this.getChildren(path, optionsObj);
 
@@ -523,10 +555,10 @@ class Menu {
             option.style.alignItems = "center";
             option.style.width = "100%";
             option.style.height = "48px";
-            if( currentChildren.indexOf(optionObj) == 0 ) option.style.borderTop = "1px solid rgb(223 223 223)";
+            if (currentChildren.indexOf(optionObj) == 0) option.style.borderTop = "1px solid rgb(223 223 223)";
             option.style.borderBottom = "1px solid rgb(223 223 223)";
 
-            if ( currentChildren.indexOf(optionObj) == selectI ) option.classList.add("selected");
+            if (currentChildren.indexOf(optionObj) == selectI) option.classList.add("selected");
 
             this.createItem(option, optionObj);
 
@@ -559,7 +591,7 @@ class Menu {
         WebStation.blockControls = true;
         this.ele.style.opacity = "1";
         this.listener = (e) => {
-            if ( e.code == "Space" ) this.close();
+            if (e.detail.code == "START") this.close();
 
             this.handleKeys(e);
         };
@@ -567,51 +599,53 @@ class Menu {
     };
 
     close() {
-        if ( this.listener !== null ) removeEventListener("keydown", this.listener);
+        if (this.listener !== null) WebStation.keybind.removeEventListener("down", this.listener);
         this.ele.style.opacity = "0";
         WebStation.blockControls = false;
     };
 
     handleKeys(e) {
         var selected = document.querySelector("#menu .selected");
-        var menuList = Array.prototype.slice.call( document.querySelector("#menu").childNodes[1].childNodes );
+        var menuList = Array.prototype.slice.call(document.querySelector("#menu").childNodes[1].childNodes);
         var currentI = menuList.indexOf(selected);
-        
-        switch ( e.detail.code ) {
+
+        switch (e.detail.code) {
             case "DPAD_UP":
-                if ( !selected.previousElementSibling ) return;
+                if (!selected.previousElementSibling) return;
                 selected.previousElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
+                selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "center", inline: "center" });
                 WebStation.music.playSFX("navigate.mp3");
                 break;
             case "DPAD_DOWN":
-                if ( !selected.nextElementSibling ) return;
+                if (!selected.nextElementSibling) return;
                 selected.nextElementSibling.classList.add("selected");
                 selected.classList.remove("selected");
+                selected.previousElementSibling.scrollIntoView({ behavior: "instant", block: "start", inline: "center" });
                 WebStation.music.playSFX("navigate.mp3");
                 break;
 
             case "DPAD_LEFT":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
-                
+
                 var type = currentJson.type;
 
-                if ( type == "selection") {
+                if (type == "selection") {
                     WebStation.music.playSFX("navigate.mp3");
                     var currentSelectedIndex = Object.values(currentJson.value).indexOf(true);
                     var newIndex = currentSelectedIndex - 1;
 
-                    if ( newIndex < 0 ) newIndex = Object.keys(currentJson.value).length - 1;
-                    if ( newIndex > Object.keys(currentJson.value).length - 1 ) newIndex = 0;
+                    if (newIndex < 0) newIndex = Object.keys(currentJson.value).length - 1;
+                    if (newIndex > Object.keys(currentJson.value).length - 1) newIndex = 0;
 
                     var nameForCurrentIndex = Object.keys(currentJson.value)[currentSelectedIndex];
                     var nameForNewIndex = Object.keys(currentJson.value)[newIndex];
-                    
-                    currentJson.value[ nameForCurrentIndex ] = false;
-                    currentJson.value[ nameForNewIndex ] = true;
 
-                    if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
+                    currentJson.value[nameForCurrentIndex] = false;
+                    currentJson.value[nameForNewIndex] = true;
+
+                    if (currentJson.onchange) currentJson.onchange(currentJson.value);
 
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
@@ -619,24 +653,24 @@ class Menu {
             case "DPAD_RIGHT":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
-                
+
                 var type = currentJson.type;
 
-                if ( type == "selection") {
+                if (type == "selection") {
                     WebStation.music.playSFX("navigate.mp3");
                     var currentSelectedIndex = Object.values(currentJson.value).indexOf(true);
                     var newIndex = currentSelectedIndex + 1;
 
-                    if ( newIndex < 0 ) newIndex = Object.keys(currentJson.value).length - 1;
-                    if ( newIndex > Object.keys(currentJson.value).length - 1 ) newIndex = 0;
+                    if (newIndex < 0) newIndex = Object.keys(currentJson.value).length - 1;
+                    if (newIndex > Object.keys(currentJson.value).length - 1) newIndex = 0;
 
                     var nameForCurrentIndex = Object.keys(currentJson.value)[currentSelectedIndex];
                     var nameForNewIndex = Object.keys(currentJson.value)[newIndex];
-                    
-                    currentJson.value[ nameForCurrentIndex ] = false;
-                    currentJson.value[ nameForNewIndex ] = true;
 
-                    if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
+                    currentJson.value[nameForCurrentIndex] = false;
+                    currentJson.value[nameForNewIndex] = true;
+
+                    if (currentJson.onchange) currentJson.onchange(currentJson.value);
 
                     this.createMenu(false, menuObj, currentPath, currentI)
                 };
@@ -644,22 +678,30 @@ class Menu {
             case "A":
                 var { currentChildren, headerTxt, footerTxt } = this.getChildren(currentPath, menuObj);
                 var currentJson = currentChildren.find(e => e.name == selected.firstElementChild.innerText.toLowerCase());
-                
+
                 var type = currentJson.type;
-                
-                switch ( type ) {
+
+                switch (type) {
                     case "link":
                         WebStation.music.playSFX("select.mp3");
-                        this.createMenu(false, menuObj, currentPath + selected.firstElementChild.innerText.toLowerCase() + "/")
+                        this.createMenu(false, menuObj, currentPath + selected.firstElementChild.innerText.toLowerCase() + "/");
                         break;
                     case "switch":
-                        if ( currentJson.value == true ) currentJson.value = false;
-                        else if ( currentJson.value == false ) currentJson.value = true;
-                        if ( currentJson.onchange ) currentJson.onchange( currentJson.value );
+                        if (currentJson.value == true) currentJson.value = false;
+                        else if (currentJson.value == false) currentJson.value = true;
+                        if (currentJson.onchange) currentJson.onchange(currentJson.value);
                         WebStation.music.playSFX("checkbox.mp3");
                         this.createMenu(false, menuObj, currentPath, currentI)
                         break;
                     case "selection":
+                        break;
+                    case "file":
+                        WebStation.music.playSFX("select.mp3");
+                        if (currentJson.value.isDir == true) {
+                            this.createMenu(false, menuObj, currentPath + selected.firstElementChild.innerText.toLowerCase() + "/");
+                        } else if (currentJson.value.isDir == false) {
+                            WebStation.catalog.installRom(currentJson.value.link, currentJson.value.name)
+                        };
                         break;
                     case "function":
                         WebStation.music.playSFX("select.mp3");
@@ -669,12 +711,12 @@ class Menu {
                 break;
             case "B":
                 WebStation.music.playSFX("back.mp3");
-                if ( currentPath == "/" ) {
+                if (currentPath == "/") {
                     this.close();
                 } else {
                     let pathArr = currentPath.slice(0, -1).split("/");
                     pathArr.pop();
-                    this.createMenu(false, menuObj, `${ pathArr.join("/") }/`);
+                    this.createMenu(false, menuObj, `${pathArr.join("/")}/`);
                 };
                 break;
         };
